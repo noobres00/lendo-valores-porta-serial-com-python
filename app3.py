@@ -1,9 +1,9 @@
 # -*- coding: cp1252 -*-
-
 import serial.tools.list_ports
 import tkinter as tk
 from tkinter import ttk
 
+#class app(tk.Tk()
 
 
 def selec_port():
