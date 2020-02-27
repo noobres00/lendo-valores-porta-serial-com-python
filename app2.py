@@ -2,7 +2,8 @@ import tkinter as tk
 from tkinter import font
  
 import sys
-import serial    # importa a biblioteca pyserial
+import serial
+# importa a biblioteca pyserial
  
 class myApp(object):
      
