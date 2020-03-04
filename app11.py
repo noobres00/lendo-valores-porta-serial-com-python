@@ -11,6 +11,7 @@ from tkinter import *
 import serial.tools.list_ports
 from mettler_toledo_device import MettlerToledoDevice
 import requests
+from websocket import create_connection
 
 #dev = MettlerToledoDevice(port='COM5') # Windows specific port
 
@@ -45,6 +46,20 @@ class App(threading.Thread):
 
         requests.post(url, data = myobj)
 
+    def geraNumero(self):
+
+        ws = create_connection("ws://localhost:1880/ws/teste")
+        ws.send("gera_numero")
+        result =  int(ws.recv()) + 1
+        ws.close()
+        self.txt_label_numero_barra['text'] = (result)
+        if self.txt_label_numero_barra['text'] == result:
+
+            self.enviarValor['state'] = 'normal'
+            print('foi')
+
+
+
     def AddWidgets(self):
         self.TopFrame = Frame(self.janela, background='#cdad00', width=500, height=10, bd=5, relief='flat')
         self.TopFrame.place(x=0, y=0)
@@ -64,31 +79,41 @@ class App(threading.Thread):
         self.labelimagem = tk.Label(image=self.imagem, bd=0 ,relief='flat')
         self.labelimagem.place(x=120, y=20)
 
-        self.txt_label_peso = tk.Label(self.janela, text='...', width=25, height=3, background='white', font='Arial 18 bold')
-        self.txt_label_peso.place(x=45, y=120)
+        #LABELS
+        self.txt_label_peso = tk.Label(self.janela, text='...', background='white', font='Arial 18 bold')
+        self.txt_label_peso.place(x=180, y=150)
+
+        self.txt_label_numero_barra = tk.Label(self.janela, text='...', background='white', font='Arial 18 bold')
+        self.txt_label_numero_barra.place(x=180, y=200)
 
         self.txt_label_portas = tk.Label(self.janela, text = 'Portas Disponíveis: ', background = 'white', font = 'Arial 8 bold')
         self.txt_label_portas.place(x = 45, y = 100)
 
+        self.txt_porta_selecionada_opt = tk.Label(self.janela, text='Porta Selecionada: ', background='white',
+                                             font='Arial 8 bold')
+        self.txt_porta_selecionada_opt.place(x=150, y=350)
+
+        self.txt_porta_selecionada_selec = tk.Label(self.janela, text='...', background='white', font='Arial 8 bold')
+
+        self.txt_porta_selecionada_selec.place(x=270, y=350)
+
+        #BUTTONS
         self.ObterValor = Button(self.janela, text='Obter Peso', width=9, height=1, bd=5, relief='flat', background='#cdad00',
                                  activebackground='#8b7500', activeforeground='#8b7500', foreground='#000', command=self.Obter)
         self.ObterValor.place(x=45, y=150)
 
-        self.enviarValor = Button(self.janela, text='Enviar Peso', width=9, height=1, bd=5, relief='flat', background='#cdad00',
+        self.gerarNumero = Button(self.janela, text='Gerar Numero', width=9, height=1, bd=5, relief='flat', background='#cdad00', 
+                                 activebackground='#8b7500', activeforeground='#8b7500', foreground='#000', command=self.geraNumero)
+        self.gerarNumero.place(x=45, y=200)
+
+        self.enviarValor = Button(self.janela, text='Enviar Peso', width=9, height=1, bd=5, relief='flat', background='#cdad00', state = DISABLED,
                                  activebackground='#8b7500', activeforeground='#8b7500', foreground='#000', command=self.enviaDados)
-        self.enviarValor.place(x=350, y=150)
+        self.enviarValor.place(x=45, y=250)
 
         self.btn_obter = tk.Button(self.janela, text='Conectar', width=8, height=1, bd=5, relief='flat', background='#cdad00',
                                    activebackground='#8b7500', activeforeground='#8b7500', foreground='#000', command=self.selec_port)
         self.btn_obter.place(x=330, y=90)
 
-        self.txt_porta_selecionada_opt = tk.Label(self.janela, text='Porta Selecionada: ', background='white',
-                                             font='Arial 8 bold')
-        self.txt_porta_selecionada_opt.place(x=150, y=200)
-
-        self.txt_porta_selecionada_selec = tk.Label(self.janela, text='...', background='white', font='Arial 8 bold')
-
-        self.txt_porta_selecionada_selec.place(x=270, y=200)
 
         self.comlist = serial.tools.list_ports.comports()
         self.connected = []
