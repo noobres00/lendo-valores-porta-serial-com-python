@@ -3,6 +3,9 @@ import tkinter
 from tkinter.ttk import *
 import serial.tools.list_ports
 import requests
+from time import sleep
+
+inicia_contagem = True
 
 # objeto lista de portas
 comlist = serial.tools.list_ports.comports()
@@ -11,6 +14,7 @@ for element in comlist:
     portas.append(element.device)
 
 def checaPorta():
+    inicia_contagem = False
     lbl_prt.configure(text = port_selec.get())
     porta_selecionada = port_selec.get()
 
@@ -20,7 +24,6 @@ def checaPorta():
     requests.post(url, data = myobj)
 
     #print(x.text)
-
 
 
 principal = tk.Tk() 
@@ -45,6 +48,9 @@ cbb['values'] = portas
 btn1 = tk.Button(principal, text = 'Selecionar Porta', command = checaPorta, font = 8)
 btn1.grid(column = 0, row = 2)
 
+#btn2 = tk.Button(principal, text = 'Pa', command = conta, font = 8)
+#btn2.grid(column = 0, row = 3)
+
 #lbl_link = tk.Label(principal, text = 'Link: ', font = 8)
 #lbl_link.grid(column = 0, row = 3)
 #
@@ -53,3 +59,9 @@ btn1.grid(column = 0, row = 2)
 
 
 principal.mainloop() 
+
+inicia_contagem = True
+while inicia_contagem:
+
+    print('contando')
+    sleep(10)
