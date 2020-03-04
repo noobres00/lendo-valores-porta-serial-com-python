@@ -33,22 +33,40 @@ class App(threading.Thread):
         self.janela.mainloop()
 
     def enviaDados(self):
-
+        
+        #local de destino de envio dos dados
         url = 'http://ptu-autcp-01:8080/recebePeso'
-        myobj = {'porta_seleciona': self.txt_label_peso['text']}
+        #formata a mensagem
+        myobj = {'peso': self.txt_label_peso['text'], 'barra': self.txt_label_numero_barra['text']}
 
+        #envia dados
         requests.post(url, data = myobj)
+
+        #desabilita botao enviar valores
+        self.enviarValor['state'] = 'disabled'
+        #habilita botao para gerar numero da barra
+        self.gerarNumero['state'] = 'normal'
+        #limpa texto numero da barra
+        self.txt_label_numero_barra['text'] = ''
 
     def geraNumero(self):
 
+        #cria conexao com o webservice
         ws = create_connection("ws://localhost:1880/ws/teste")
+        #envia comando para o webservice entender o que esta sendo requisitado
         ws.send("gera_numero")
+        #recebe o numero da ultima barra e adiciona um
         result =  int(ws.recv()) + 1
+        #encerra conexao com o webservice
         ws.close()
+        #escreve o valor do numero novo da barra para o usuario
+
+        #tem que verificar, nao ficou legal
         self.txt_label_numero_barra['text'] = (result)
         if self.txt_label_numero_barra['text'] == result:
             self.enviarValor['state'] = 'normal'
 
+        self.gerarNumero['state'] = 'disabled'
 
 
 
