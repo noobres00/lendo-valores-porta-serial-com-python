@@ -13,13 +13,6 @@ from mettler_toledo_device import MettlerToledoDevice
 import requests
 from websocket import create_connection
 
-#dev = MettlerToledoDevice(port='COM5') # Windows specific port
-
-
-#a = dev.get_weight_stable()
-#print(a)
-
-
 class App(threading.Thread):
 
     def __init__(self):
@@ -54,9 +47,8 @@ class App(threading.Thread):
         ws.close()
         self.txt_label_numero_barra['text'] = (result)
         if self.txt_label_numero_barra['text'] == result:
-
             self.enviarValor['state'] = 'normal'
-            print('foi')
+
 
 
 
