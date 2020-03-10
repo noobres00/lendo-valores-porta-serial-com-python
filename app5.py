@@ -57,7 +57,6 @@ btn1.grid(column = 0, row = 2)
 #txt = Entry(principal,width=50)
 #txt.grid(column = 1, row = 3)
 
-
 principal.mainloop() 
 
 inicia_contagem = True
